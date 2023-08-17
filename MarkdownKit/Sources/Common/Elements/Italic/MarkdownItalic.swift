@@ -24,6 +24,13 @@ open class MarkdownItalic: MarkdownCommonElement {
   }
     
   public func match(_ match: NSTextCheckingResult, attributedString: NSMutableAttributedString) {
+    // We check if the matched substring already has a link attribute,
+    // which can occur when the URL has multiple underscores
+    // (e.g. https://website.com?user_id=abc&session_id=xyz)
+    guard !self.attributedString(attributedString, hasAttribute: .link, at: match.range) else {
+        return
+    }
+
     attributedString.deleteCharacters(in: match.range(at: 4))
 
     var attributes = self.attributes
@@ -45,4 +52,15 @@ open class MarkdownItalic: MarkdownCommonElement {
 
     attributedString.deleteCharacters(in: match.range(at: 2))
   }
+
+   private func attributedString(
+     _ attributedString: NSAttributedString,
+     hasAttribute attribute: NSAttributedString.Key,
+     at range: NSRange
+   ) -> Bool {
+     let attributedSubstring = attributedString.attributedSubstring(from: range)
+     var effectiveRange = NSRange(location: 0, length: 0)
+     let atributes = attributedSubstring.attributes(at: 0, effectiveRange: &effectiveRange)
+     return atributes.keys.contains(attribute)
+   }
 }
