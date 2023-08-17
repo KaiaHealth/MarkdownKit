@@ -151,16 +151,17 @@ open class MarkdownParser {
   }
 
   fileprivate func updateDefaultElements() {
-    // Parsing order matters!
+    // Parsing order matters! For example, links should be parsed before italic,
+    // so URLs with multiple underscores don't lose the underscores.
     let pairs: [(EnabledElements, MarkdownElement)] = [
       (.header, header),
       (.list, list),
       (.quote, quote),
+      (.link, link),
+      (.automaticLink, automaticLink),
       (.bold, bold),
       (.italic, italic),
       (.strikethrough, strikethrough),
-      (.link, link),
-      (.automaticLink, automaticLink),
       (.code, code),
     ]
     defaultElements = pairs.compactMap { enabled, element in
