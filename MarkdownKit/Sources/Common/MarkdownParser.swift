@@ -159,8 +159,8 @@ open class MarkdownParser {
       (.bold, bold),
       (.italic, italic),
       (.strikethrough, strikethrough),
-      (.link, link),
       (.automaticLink, automaticLink),
+      (.link, link),
       (.code, code),
     ]
     defaultElements = pairs.compactMap { enabled, element in
